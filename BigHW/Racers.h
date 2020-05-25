@@ -4,8 +4,8 @@
 typedef struct racecar {
 	double top_speed; 
 	double acceleration;
-	double cornering speed;
-	double[18] DNA;
+	double cornering_speed;
+	double DNA[18];
 }racecar;
 
 typedef struct driver {
