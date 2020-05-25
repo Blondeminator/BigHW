@@ -10,8 +10,6 @@ typedef struct racecar {
 
 typedef struct driver {
 	double cooperativeness;
-	double Hello_lõrinc;
-	double Hello_Zsolt;
 
 };
 
