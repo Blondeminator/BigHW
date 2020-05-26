@@ -33,6 +33,7 @@ int main()
 	else {
 		cout << "File not found or could not be opened!" << endl;
 	}
-	cout << tracks[2][2].first << endl;
+
+
 }
 
