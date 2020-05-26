@@ -17,12 +17,15 @@ typedef struct driver {
 
 typedef class Racer
 {
+public:
 	driver driver_object;
 	racecar car_object;
-	double position_on_truck;
+	int season_points;
+
 	std::vector<double> lap_times; // self measured time
+	double position_on_truck;
 	int status; //0: acceleration, 1: top speed, 2: braking 3: at cornering speed
-	double current_speed; [m/s] //how far back the breaking begins [m]
+	double current_speed; // [m/s]
 
 	Racer(driver& d, racecar& rc);
 	void new_track();
