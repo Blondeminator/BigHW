@@ -9,6 +9,9 @@ int random_seed = 0;
 double delta_t = 0.1;
 int number_of_contestants = 20;
 int number_of_laps = 10;
+double q_s = 1; //
+double q_acc = 1;
+double q_cor = 1;
 
 vector<vector<pair<double, int>>> tracks;
 vector<pair<double, int>> track_read;
@@ -19,7 +22,60 @@ vector<racer> racers; //car + driver -> racer agent
 double current_time = 0;
 
 void make_cars(vector<racecar>& mc_c) {
+	for (int i = 0; i < number_of_contestants; i++) {
+		racecar new_racecar;
+		new_racecar.id = i;
+		for (int j = 0; j < 18; j++) {
+			double random = (double)rand() / RAND_MAX;
+			if (random < 0.5) {
+				new_racecar.DNA[j] = 0;
+			}
+			else new_racecar.DNA[j] = 1;
+		}
+		new_racecar.top_speed = 70 + ((new_racecar.DNA[0] + new_racecar.DNA[1] + new_racecar.DNA[2]) - (new_racecar.DNA[3] + new_racecar.DNA[4] + new_racecar.DNA[5]) - (new_racecar.DNA[12] + new_racecar.DNA[13] + new_racecar.DNA[14]) + (new_racecar.DNA[15] + new_racecar.DNA[16] + new_racecar.DNA[17])) * q_s;
+		new_racecar.acceleration = 10 + (-new_racecar.DNA[0] - new_racecar.DNA[1] - new_racecar.DNA[2] + (new_racecar.DNA[3] + new_racecar.DNA[4] + new_racecar.DNA[5]) + (new_racecar.DNA[6] + new_racecar.DNA[7] + new_racecar.DNA[8]) - (new_racecar.DNA[9] + new_racecar.DNA[10] + new_racecar.DNA[11]))* q_acc;
+		new_racecar.cornering_speed = 30 + ((new_racecar.DNA[9] + new_racecar.DNA[10] + new_racecar.DNA[11]) - (new_racecar.DNA[6] + new_racecar.DNA[7] + new_racecar.DNA[8]) + (new_racecar.DNA[12] + new_racecar.DNA[13] + new_racecar.DNA[14]) - (new_racecar.DNA[15] + new_racecar.DNA[16] + new_racecar.DNA[17])) * q_cor;
+		mc_c.push_back(new_racecar);
+	}
+}
 
+
+
+void make_drivers(vector<driver>& md_d) {
+	for (int i = 0; i < number_of_contestants; i++) {
+		driver new_driver;
+		for (int j = 0; j < 32; j++) {
+			double random = (double)rand() / RAND_MAX;
+			if (random < 0, 5) {
+				new_driver.DNA[j] = 0;
+			}
+			else new_driver.DNA[j] = 1;
+		}
+		new_driver.id = i;
+		int DNA_1 = 0;
+		int DNA_2 = 0;
+		int DNA_3 = 0;
+		int DNA_4 = 0;
+		for (int j = 0; j < 8; j++) {
+			DNA_1 += new_driver.DNA[j];
+		}
+		for (int j = 8; j < 16; j++) {
+			DNA_1 += new_driver.DNA[j];
+		}
+		for (int j = 16; j < 24; j++) {
+			DNA_1 += new_driver.DNA[j];
+		}
+		for (int j = 24; j < 32; j++) {
+			DNA_1 += new_driver.DNA[j];
+		}
+
+
+		new_driver.cooperativeness[0] = DNA_1 / 8;
+		new_driver.cooperativeness[1] = DNA_2 / 8;
+		new_driver.cooperativeness[2] = DNA_3 / 8;
+		new_driver.cooperativeness[3] = DNA_4 / 8;
+		md_d.push_back(new_driver);
+	}
 }
 
 void make_drivers(vector<driver>& md_d) {

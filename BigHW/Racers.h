@@ -11,7 +11,7 @@ typedef struct racecar {
 
 typedef struct driver {
 	int id;
-	double cooperativeness;
+	double cooperativeness[4]; //cooperativeness at status: 0 to 3
 	int DNA[32];
 }driver;
 
