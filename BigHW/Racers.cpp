@@ -16,3 +16,7 @@ void Racer::new_track() {
 	lap_times.push_back(0);
 	status = 0;
 }
+
+double Racer::brake_before_corner() {
+
+}

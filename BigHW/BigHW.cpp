@@ -6,6 +6,7 @@
 using namespace std;
 
 int random_seed = 0;
+double delta_t = 0.1;
 
 vector<vector<pair<double, int>>> tracks;
 vector<pair<double, int>> track_read;

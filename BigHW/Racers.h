@@ -22,9 +22,10 @@ typedef class Racer
 	double position_on_truck;
 	std::vector<double> lap_times; // self measured time
 	int status; //0: acceleration, 1: top speed, 2: braking 3: at cornering speed
-	double break_before_corner; //how far back the breaking begins [m]
+	double current_speed; [m/s] //how far back the breaking begins [m]
 
 	Racer(driver& d, racecar& rc);
 	void new_track();
+	double brake_before_corner();
 }racer;
 
