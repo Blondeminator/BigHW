@@ -7,8 +7,11 @@ using namespace std;
 
 int random_seed = 0;
 double delta_t = 0.1;
+
+int number_of_seasons = 10;
 int number_of_contestants = 20;
 int number_of_laps = 10;
+
 double q_top_speed = 1; // 1 genes worth of bonus top speed
 double q_acceleration = 1; // 1 genes worth of bonus acceleration
 double q_cornering_speed = 1; // 1 genes worth of bonus cornering speed
@@ -82,18 +85,18 @@ void end_race(vector<Racer>& er_r) {
 	// +1 pont a leggyorsabb körért
 	// +10 pont a nyertesnek +9 a 2-nak.... (Nyertes akinek a köridõ összege a legkisebb)
 	for (int i = 0; i < er_r.size(); i++) {
-		racers[i].new_track();
+		er_r[i].new_track();
 	}
 }
 
 void make_racers(vector<Racer>& mr_r, vector<racecar>& mr_c, vector<driver>& mr_d) {
 	for (int i = 0; i < number_of_contestants; i++) {
-		racers.push_back(racer(mr_d[i], mr_c[i]));
+		mr_r.push_back(racer(mr_d[i], mr_c[i]));
 	}
 }
 
 void Is_brake_needed(racer& r) {
-	if ((r.position_on_truck + r.brake_before_corner()) > tracks[r.current_track][r.before_corner].first) {
+	if ((r.position_on_track + r.brake_before_corner()) > tracks[r.current_track][r.before_corner].first) {
 		r.status = 2;
 	}
 }
@@ -103,6 +106,17 @@ void Is_at_top_speed(racer& r) {
 		r.status = 1;
 		r.current_speed = r.car_object.top_speed;
 	}
+}
+
+void Is_at_corner(racer& r) {
+	if (r.position_on_track > (tracks[r.current_track][r.before_corner].first - 10)) {
+		r.status = 3;
+		r.current_speed = r.car_object.cornering_speed;
+	}
+}
+
+void Is_out_of_corner(racer& r) {
+
 }
 
 void status_check() {
@@ -115,10 +129,10 @@ void status_check() {
 			Is_brake_needed(racers[i]);
 		}
 		if (racers[i].status == 2) { // brake
-
+			Is_at_corner(racers[i]);
 		}
 		if (racers[i].status == 3) { //at cornering_speed
-
+			Is_out_of_corner();
 		}
 	}
 }

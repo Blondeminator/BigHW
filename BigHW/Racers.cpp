@@ -11,7 +11,7 @@ Racer::Racer(driver& d, racecar& rc) {
 }
 
 void Racer::new_track() {
-	position_on_truck = 0;
+	position_on_track = 0;
 	status = 0;
 	lap_times.clear();
 	lap_times.push_back(0);
