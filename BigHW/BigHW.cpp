@@ -23,7 +23,7 @@ void make_drivers(vector<driver>& md_d);
 
 void make_racers(vector<Racer>& mr_r, vector<racecar>& mr_c, vector<driver>& mr_d) {
 	for (int i = 0; i < number_of_contestants; i++) {
-		racers.push_back(new Racer(mr_d[i], mr_c[i]));
+		racers.push_back(new racer(mr_d[i], mr_c[i]));
 	}
 }
 

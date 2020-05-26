@@ -17,5 +17,8 @@ void Racer::new_track() {
 }
 
 double Racer::brake_before_corner() {
-
+	double delta_v = current_speed - car_object.cornering_speed;
+	double t = delta_v / (car_object.acceleration * 2);
+	double distance = (car_object.acceleration * 2) / 2 * pow(t, 2) +  car_object.cornering_speed * t;
+	return distance;
 }
