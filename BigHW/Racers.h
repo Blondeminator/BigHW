@@ -21,8 +21,10 @@ public:
 	driver driver_object;
 	racecar car_object;
 	int season_points;
+	int current_track;
 
 	std::vector<double> lap_times; // self measured time
+	int before_corner;
 	double position_on_truck;
 	int status; //0: acceleration, 1: top speed, 2: braking 3: at cornering speed
 	double current_speed; // [m/s]
