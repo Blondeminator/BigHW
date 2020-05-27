@@ -142,12 +142,6 @@ void make_racers(vector<Racer>& mr_r, vector<racecar>& mr_c, vector<driver>& mr_
 	}
 }
 
-void make_racers(vector<Racer>& mr_r, vector<racecar>& mr_c, vector<driver>& mr_d) {
-	for (int i = 0; i < number_of_contestants; i++) {
-		mr_r.push_back(racer(mr_d[i], mr_c[i]));
-	}
-}
-
 void Is_brake_needed(racer& r) {
 	if ((r.position_on_track + r.brake_before_corner()) > tracks[r.current_track][r.before_corner].first) {
 		r.status = 2;
@@ -223,9 +217,6 @@ void step_racers() {
 		}
 		if (racers[i].lap_times.size() > number_of_laps) {
 			racers[i].lap_times.pop_back();
-			racers[i].Race_finished++;
-		}
-		if (racers[i].Race_finished) {
 			racers[i].status = 5; // do nothing
 		}
 	}

@@ -6,7 +6,6 @@ Racer::Racer(driver& d, racecar& rc) {
 	car_object = rc;
 	status = 0;
 	season_points = 0;
-	Race_finished = -1;
 	current_track = -1;
 	before_corner = -1;
 }
@@ -18,7 +17,6 @@ void Racer::new_track() {
 	lap_times.push_back(0);
 	status = 0;
 	current_track++;
-	Race_finished = 0;
 	before_corner = 0;
 }
 

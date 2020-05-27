@@ -22,7 +22,6 @@ public:
 	racecar car_object;
 	int season_points;
 	int current_track;
-	int Race_finished;
 
 	std::vector<double> lap_times; // self measured time
 	int before_corner;
