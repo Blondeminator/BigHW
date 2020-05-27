@@ -137,6 +137,7 @@ void end_race(vector<Racer>& er_r) {
 	for (int i = 0; i < 10; i++) {
 		er_r[top10[i].first].season_points += 10 - i;
 	}
+	er_r[best_time.first].season_points++;
 }
 
 void new_race(vector<Racer>& nr_r) {
