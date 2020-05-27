@@ -4,7 +4,7 @@
 Racer::Racer(driver& d, racecar& rc) {
 	driver_object = d;
 	car_object = rc;
-	status = 0;
+	status = 5;
 	season_points = 0;
 	current_track = -1;
 	before_corner = -1;

@@ -24,6 +24,14 @@ vector<driver> drivers;
 vector<racer> racers; //car + driver -> racer agent
 double current_time = 0;
 
+vector<racecar> seasonal_top10_cars;
+vector<driver> seasonal_top10_drivers;
+
+int flip(int a) {
+	if (a)return 0;
+	else return 1;
+}
+
 void make_cars(vector<racecar>& mc_c) {
 	for (int i = 0; i < number_of_contestants; i++) {
 		racecar new_racecar;
@@ -41,8 +49,6 @@ void make_cars(vector<racecar>& mc_c) {
 		mc_c.push_back(new_racecar);
 	}
 }
-
-
 
 void make_drivers(vector<driver>& md_d) {
 	for (int i = 0; i < number_of_contestants; i++) {
@@ -131,12 +137,33 @@ void end_race(vector<Racer>& er_r) {
 	for (int i = 0; i < 10; i++) {
 		er_r[top10[i].first].season_points += 10 - i;
 	}
-	for (int i = 0; i < er_r.size(); i++) {
-		er_r[i].new_track();
-	}
 }
 
-void make_racers(vector<Racer>& mr_r, vector<racecar>& mr_c, vector<driver>& mr_d) {
+void new_race(vector<Racer>& nr_r) {
+	for (int i = 0; i < nr_r.size(); i++) {
+		nr_r[i].new_track();
+	}
+	current_time = 0;
+}
+
+void new_racers(vector<Racer>& nr_r, vector<racecar>& nr_c, vector<driver>& nr_d) {
+	nr_r.clear();
+	nr_d.clear();
+	nr_c.clear();
+	//make new drivers and racecars using top10 dna
+
+
+
+	make_racers(nr_r, nr_c, nr_d);
+}
+
+void season_end(vector<racer>& se_r) {
+	seasonal_top10_cars.clear();
+	seasonal_top10_drivers.clear();
+	//get top 10 best racers based on their .season_points fill best car & driver vectors
+}
+
+void make_racers(vector<Racer>& mr_r, vector<racecar>& mr_c, vector<driver>& mr_d) { // cars + drivers -> racers
 	for (int i = 0; i < number_of_contestants; i++) {
 		mr_r.push_back(racer(mr_d[i], mr_c[i]));
 	}
@@ -168,8 +195,6 @@ void Is_out_of_corner(racer& r) {
 		r.before_corner++;
 	}
 }
-
-
  
 void status_check() {
 	for (int i = 0; i < racers.size(); i++) {
@@ -221,6 +246,17 @@ void step_racers() {
 		}
 	}
 	current_time += delta_t;
+}
+
+void season(vector<racer>& s_r) {
+	make_cars(cars);
+	make_drivers(drivers);
+	make_racers(racers, cars, drivers);
+	racers[0].status = 0; //first racer to start
+	int all_racers_done = 0;
+	do{
+
+	} while (!all_racers_done);
 }
 
 int main()
