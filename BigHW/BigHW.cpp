@@ -148,13 +148,116 @@ void new_race(vector<Racer>& nr_r) {
 	current_time = 0;
 }
 
+void make_racers(vector<Racer>& mr_r, vector<racecar>& mr_c, vector<driver>& mr_d) { // cars + drivers -> racers
+	for (int i = 0; i < number_of_contestants; i++) {
+		mr_r.push_back(racer(mr_d[i], mr_c[i]));
+	}
+}
+
 void new_racers(vector<Racer>& nr_r, vector<racecar>& nr_c, vector<driver>& nr_d) {
 	nr_r.clear();
 	nr_d.clear();
 	nr_c.clear();
+	racecar new_racecar;
+	for (int i = 0; i < number_of_contestants - 10; i++) {
+		int random1 = RAND_MAX % 10;
+		int random2 = RAND_MAX % 9;
+		if (random1 == random2) {
+			random2 = 9;
+		}
+		new_racecar.id = i;
+
+		for (int j = 0; j < 9; j++) {
+			new_racecar.DNA[j] = seasonal_top10_cars[random1].DNA[j];
+		}
+		for (int j = 9; j < 18; j++) {
+			new_racecar.DNA[j] = seasonal_top10_cars[random2].DNA[j];
+		}
+
+		int random_DNA = RAND_MAX % 18;
+		new_racecar.DNA[random_DNA] = 1;
+
+		new_racecar.top_speed = 70 + ((new_racecar.DNA[0] + new_racecar.DNA[1] + new_racecar.DNA[2]) - (new_racecar.DNA[3] + new_racecar.DNA[4] + new_racecar.DNA[5]) - (new_racecar.DNA[12] + new_racecar.DNA[13] + new_racecar.DNA[14]) + (new_racecar.DNA[15] + new_racecar.DNA[16] + new_racecar.DNA[17])) * q_top_speed;
+		new_racecar.acceleration = 10 + (-new_racecar.DNA[0] - new_racecar.DNA[1] - new_racecar.DNA[2] + (new_racecar.DNA[3] + new_racecar.DNA[4] + new_racecar.DNA[5]) + (new_racecar.DNA[6] + new_racecar.DNA[7] + new_racecar.DNA[8]) - (new_racecar.DNA[9] + new_racecar.DNA[10] + new_racecar.DNA[11])) * q_acceleration;
+		new_racecar.cornering_speed = 30 + ((new_racecar.DNA[9] + new_racecar.DNA[10] + new_racecar.DNA[11]) - (new_racecar.DNA[6] + new_racecar.DNA[7] + new_racecar.DNA[8]) + (new_racecar.DNA[12] + new_racecar.DNA[13] + new_racecar.DNA[14]) - (new_racecar.DNA[15] + new_racecar.DNA[16] + new_racecar.DNA[17])) * q_cornering_speed;
+
+		int k = i;
+		for (int j = 0; j < nr_c.size(); j++) {
+			for (int l = 0; l < 10; l++) {
+				if (new_racecar.DNA == nr_d[j].DNA || new_racecar.DNA == seasonal_top10_drivers[l].DNA) {
+					i--;
+				}
+			}
+		}
+		if (k == i) {
+			nr_c.push_back(new_racecar);
+		}
+
+
+	}
+	driver new_driver;
+	for (int i = 0; i < number_of_contestants - 10; i++) {
+		int random1 = RAND_MAX % 10;
+		int random2 = RAND_MAX % 9;
+		if (random1 == random2) {
+			random2 = 9;
+		}
+
+		new_driver.id = i;
+
+		for (int j = 0; j < 16; j++) {
+			new_driver.DNA[j] = seasonal_top10_drivers[random1].DNA[j];
+		}
+		for (int j = 16; j < 32; j++) {
+			new_driver.DNA[j] = seasonal_top10_drivers[random2].DNA[j];
+		}
+		int random_DNA = RAND_MAX % 32;
+		new_driver.DNA[random_DNA] = 1;
+		int DNA_0 = 0;
+		int DNA_1 = 0;
+		int DNA_2 = 0;
+		int DNA_3 = 0;
+		for (int j = 0; j < 8; j++) {
+			DNA_0 += new_driver.DNA[j];
+		}
+		for (int j = 8; j < 16; j++) {
+			DNA_1 += new_driver.DNA[j];
+		}
+		for (int j = 16; j < 24; j++) {
+			DNA_2 += new_driver.DNA[j];
+		}
+		for (int j = 24; j < 32; j++) {
+			DNA_3 += new_driver.DNA[j];
+		}
+
+
+		new_driver.cooperativeness[0] = DNA_0 / 8;
+		new_driver.cooperativeness[1] = DNA_1 / 8;
+		new_driver.cooperativeness[2] = DNA_2 / 8;
+		new_driver.cooperativeness[3] = DNA_3 / 8;
+
+		int k = i;
+		for (int j = 0; j < nr_d.size(); j++) {
+			for (int l = 0; l < 10; l++) {
+				if (new_driver.DNA == nr_d[j].DNA || new_driver.DNA == seasonal_top10_drivers[l].DNA) {
+					i--;
+				}
+			}
+		}
+		if (k == i) {
+			nr_d.push_back(new_driver);
+		}
+	}
+	for (int i = 0; i < 10; i++) {
+		new_racecar = seasonal_top10_cars[i];
+		new_racecar.id = nr_c.size();
+		nr_c.push_back(new_racecar);
+
+		new_driver = seasonal_top10_drivers[i];
+		new_driver.id = nr_d.size();
+		nr_d.push_back(new_driver);
+	}
 	//make new drivers and racecars using top10 dna
-
-
 
 	make_racers(nr_r, nr_c, nr_d);
 }
@@ -162,12 +265,27 @@ void new_racers(vector<Racer>& nr_r, vector<racecar>& nr_c, vector<driver>& nr_d
 void season_end(vector<racer>& se_r) {
 	seasonal_top10_cars.clear();
 	seasonal_top10_drivers.clear();
-	//get top 10 best racers based on their .season_points fill best car & driver vectors
-}
 
-void make_racers(vector<Racer>& mr_r, vector<racecar>& mr_c, vector<driver>& mr_d) { // cars + drivers -> racers
-	for (int i = 0; i < number_of_contestants; i++) {
-		mr_r.push_back(racer(mr_d[i], mr_c[i]));
+	vector<pair<int, int>> racer_points;
+	pair<int, int> one_racer;
+	int top;
+	double max_point = 0;
+	for (int i = 0; i < se_r.size(); i++) {
+		one_racer.first = i;
+		one_racer.second = se_r[i].season_points;
+		racer_points.push_back(one_racer);
+	}
+	for (int j = 1; j < 10; j++) {
+		max_point = 0;
+		for (int i = 0; i < racer_points.size(); i++) {
+			if (racer_points[i].second > max_point) {
+				max_point = racer_points[i].second;
+				top = i;
+			}
+		}
+		seasonal_top10_cars.push_back(se_r[top].car_object);
+		seasonal_top10_drivers.push_back(se_r[top].driver_object);
+		racer_points.erase(racer_points.begin() + top);
 	}
 }
 
@@ -258,7 +376,7 @@ void season(vector<racer>& s_r) {
 	racers[start_racer_id++].status = 5; //first racer to start
 	double next_start_time = start_time_difference;
 	int all_racers_done = 0;
-	do{
+	do{ //1 futam még csak
 		if (current_time == next_start_time) {
 			racers[start_racer_id++].status = 5;
 			if (start_racer_id == racers.size()) {
@@ -268,7 +386,9 @@ void season(vector<racer>& s_r) {
 				next_start_time += start_time_difference;
 			}
 		}
-
+		status_check();
+		step_racers();
+		status_check();
 
 	} while (!all_racers_done);
 }
