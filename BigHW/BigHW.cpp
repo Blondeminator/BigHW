@@ -11,6 +11,7 @@ double delta_t = 0.1;
 int number_of_seasons = 10;
 int number_of_contestants = 20;
 int number_of_laps = 10;
+double start_time_difference = 5;
 
 double q_top_speed = 1; // 1 genes worth of bonus top speed
 double q_acceleration = 1; // 1 genes worth of bonus acceleration
@@ -253,9 +254,21 @@ void season(vector<racer>& s_r) {
 	make_cars(cars);
 	make_drivers(drivers);
 	make_racers(racers, cars, drivers);
-	racers[0].status = 0; //first racer to start
+	int start_racer_id = 0;
+	racers[start_racer_id++].status = 5; //first racer to start
+	double next_start_time = start_time_difference;
 	int all_racers_done = 0;
 	do{
+		if (current_time == next_start_time) {
+			racers[start_racer_id++].status = 5;
+			if (start_racer_id == racers.size()) {
+				next_start_time = 0;
+			}
+			else {
+				next_start_time += start_time_difference;
+			}
+		}
+
 
 	} while (!all_racers_done);
 }
