@@ -82,10 +82,63 @@ void make_drivers(vector<driver>& md_d) {
 }
 
 void end_race(vector<Racer>& er_r) {
-	// +1 pont a leggyorsabb körért
-	// +10 pont a nyertesnek +9 a 2-nak.... (Nyertes akinek a köridõ összege a legkisebb)
+	vector<pair<int, double>> track_times;
+	vector< double> summ_times;
+	vector<pair<int, double >> top10;
+	double one_time = 0;
+	pair<int, double> top_plus;
+	pair<int, double> best_time;
+	best_time.second = (double)RAND_MAX;
+	pair<int, double> one_track_one_time;
+	int highest_driver = 0;
+	for (int i = 0; i < er_r.size(); i++) {
+		for (int j = 0; j < er_r[i].lap_times.size(); j++) {
+			one_track_one_time.first = er_r[i].driver_object.id;
+			one_track_one_time.second = er_r[i].lap_times[j];
+			if (one_track_one_time.second < best_time.second) {
+				best_time.first = one_track_one_time.first;
+				best_time.second = one_track_one_time.second;
+			}
+			if (one_track_one_time.first > highest_driver) {
+				highest_driver = one_track_one_time.first;
+			}
+			track_times.push_back(one_track_one_time);
+		}
+	}
+	for (int j = 0; j <= highest_driver; j++) {
+		one_time = 0;
+		for (int i = 0; i < track_times.size(); i++) {
+			if (track_times[i].first == j) {
+				one_time += track_times[i].second;
+			}
+		}
+		summ_times.push_back(one_time);
+	}
+	for (int j = 1; j < 10; j++) {
+		double min_sum = summ_times[j];
+		int index = j;
+		pair<int, double> top_plus;
+		for (int i = 0; i < summ_times.size(); i++) {
+			if (summ_times[i] < min_sum) {
+				min_sum = summ_times[i];
+				top_plus.first = i;
+				top_plus.second = summ_times[i];
+			}
+		}
+		top10.push_back(top_plus);
+		summ_times.erase(summ_times.begin() + top_plus.first);
+	}
+	for (int i = 0; i < 10; i++) {
+		er_r[top10[i].first].season_points += 10 - i;
+	}
 	for (int i = 0; i < er_r.size(); i++) {
 		er_r[i].new_track();
+	}
+}
+
+void make_racers(vector<Racer>& mr_r, vector<racecar>& mr_c, vector<driver>& mr_d) {
+	for (int i = 0; i < number_of_contestants; i++) {
+		mr_r.push_back(racer(mr_d[i], mr_c[i]));
 	}
 }
 
@@ -116,28 +169,68 @@ void Is_at_corner(racer& r) {
 }
 
 void Is_out_of_corner(racer& r) {
-
+	if (r.position_on_track > (tracks[r.current_track][r.before_corner].first + 10)) {
+		r.status = 0;
+		r.before_corner++;
+	}
 }
 
+
+ 
 void status_check() {
 	for (int i = 0; i < racers.size(); i++) {
 		if (racers[i].status == 0) { // acc
 			Is_at_top_speed(racers[i]);
 			Is_brake_needed(racers[i]);
-		}
+		} else
 		if (racers[i].status == 1) { // top_speed
 			Is_brake_needed(racers[i]);
-		}
+		} else
 		if (racers[i].status == 2) { // brake
 			Is_at_corner(racers[i]);
-		}
+		} else
 		if (racers[i].status == 3) { //at cornering_speed
-			Is_out_of_corner();
+			Is_out_of_corner(racers[i]);
 		}
 	}
 }
 
-
+void step_racers() {
+	for (int i = 0; i < racers.size(); i++) {
+		if (racers[i].status == 0) { // acc
+			racers[i].position_on_track += racers[i].current_speed * delta_t;
+			racers[i].current_speed += racers[i].car_object.acceleration * delta_t;
+			racers[i].position_on_track += 0.5 * racers[i].car_object.acceleration * pow(delta_t, 2);
+		} else
+		if (racers[i].status == 1) { // top_speed
+			racers[i].current_speed = racers[i].car_object.top_speed;
+			racers[i].position_on_track += racers[i].current_speed * delta_t;
+		} else
+		if (racers[i].status == 2) { // brake (2 times acceleration)
+			racers[i].position_on_track += racers[i].current_speed * delta_t;
+			racers[i].current_speed += -2.0 * racers[i].car_object.acceleration * delta_t;
+			racers[i].position_on_track += -1.0 * racers[i].car_object.acceleration * pow(delta_t, 2);
+		} else
+		if (racers[i].status == 3) { //at cornering_speed
+			racers[i].current_speed = racers[i].car_object.cornering_speed;
+			racers[i].position_on_track += racers[i].current_speed * delta_t;
+		}
+	}
+	for (int i = 0; i < racers.size(); i++) {
+		racers[i].lap_times[racers[i].lap_times.size() - 1] += delta_t;
+		if (racers[i].position_on_track > tracks[racers[i].current_track][tracks[racers[i].current_track].size() - 1].first + 500) {
+			racers[i].lap_times.push_back(0);
+		}
+		if (racers[i].lap_times.size() > number_of_laps) {
+			racers[i].lap_times.pop_back();
+			racers[i].Race_finished++;
+		}
+		if (racers[i].Race_finished) {
+			racers[i].status = 5; // do nothing
+		}
+	}
+	current_time += delta_t;
+}
 
 int main()
 {
