@@ -150,7 +150,7 @@ void new_race(vector<Racer>& nr_r) {
 
 void make_racers(vector<Racer>& mr_r, vector<racecar>& mr_c, vector<driver>& mr_d) { // cars + drivers -> racers
 	for (int i = 0; i < number_of_contestants; i++) {
-		mr_r.push_back(racer(mr_d[i], mr_c[i]));
+		mr_r.push_back(Racer(mr_d[i], mr_c[i]));
 	}
 }
 
@@ -160,8 +160,8 @@ void new_racers(vector<Racer>& nr_r, vector<racecar>& nr_c, vector<driver>& nr_d
 	nr_c.clear();
 	racecar new_racecar;
 	for (int i = 0; i < number_of_contestants - 10; i++) {
-		int random1 = RAND_MAX % 10;
-		int random2 = RAND_MAX % 9;
+		int random1 = rand() % 10;
+		int random2 = rand() % 9;
 		if (random1 == random2) {
 			random2 = 9;
 		}
@@ -174,7 +174,7 @@ void new_racers(vector<Racer>& nr_r, vector<racecar>& nr_c, vector<driver>& nr_d
 			new_racecar.DNA[j] = seasonal_top10_cars[random2].DNA[j];
 		}
 
-		int random_DNA = RAND_MAX % 18;
+		int random_DNA = rand() % 18;
 		new_racecar.DNA[random_DNA] = 1;
 
 		new_racecar.top_speed = 70 + ((new_racecar.DNA[0] + new_racecar.DNA[1] + new_racecar.DNA[2]) - (new_racecar.DNA[3] + new_racecar.DNA[4] + new_racecar.DNA[5]) - (new_racecar.DNA[12] + new_racecar.DNA[13] + new_racecar.DNA[14]) + (new_racecar.DNA[15] + new_racecar.DNA[16] + new_racecar.DNA[17])) * q_top_speed;
