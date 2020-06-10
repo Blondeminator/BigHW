@@ -192,8 +192,6 @@ void new_racers(vector<Racer>& nr_r, vector<racecar>& nr_c, vector<driver>& nr_d
 		if (k == i) {
 			nr_c.push_back(new_racecar);
 		}
-
-
 	}
 	driver new_driver;
 	for (int i = 0; i < number_of_contestants - 10; i++) {
