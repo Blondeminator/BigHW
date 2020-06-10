@@ -121,7 +121,7 @@ void end_race(vector<Racer>& er_r) {
 		}
 		summ_times.push_back(one_time);
 	}
-	for (int j = 1; j < 10; j++) {
+	for (int j = 1; j <= 10; j++) {
 		double min_sum = summ_times[j];
 		int index = j;
 		pair<int, double> top_plus;
@@ -383,9 +383,6 @@ int all_racers_done(vector<racer>& ard_r) {
 }
 
 void season(vector<racer>& s_r) {
-	make_cars(cars);
-	make_drivers(drivers);
-	make_racers(racers, cars, drivers);
 	int current_track = 0;
 	while (current_track != tracks.size() - 1) {
 		new_race(s_r);
@@ -437,8 +434,14 @@ int main()
 	else {
 		cout << "File not found or could not be opened!" << endl;
 	}
-	season(racers);
-	season_end(racers);
-	cout << "Season done!" << endl;
+	make_cars(cars);
+	make_drivers(drivers);
+	make_racers(racers, cars, drivers);
+	for (int current_season = 0; current_season < number_of_seasons; current_season++) {
+		if (current_season > 0)new_racers(racers, cars, drivers);
+		season(racers);
+		season_end(racers);
+		cout << "Season done!" << endl;
+	}
 }
 
