@@ -387,7 +387,7 @@ void season(vector<racer>& s_r) {
 	make_drivers(drivers);
 	make_racers(racers, cars, drivers);
 	int current_track = 0;
-	while (current_track != tracks.size()) {
+	while (current_track != tracks.size() - 1) {
 		new_race(s_r);
 		int start_racer_id = 0;
 		racers[start_racer_id++].status = 0; //first racer to start
@@ -408,6 +408,7 @@ void season(vector<racer>& s_r) {
 			status_check();
 
 		} while (!all_racers_done(s_r));
+		end_race(s_r);
 		current_track++;
 		cout << "New race" << endl;
 	}
@@ -437,6 +438,7 @@ int main()
 		cout << "File not found or could not be opened!" << endl;
 	}
 	season(racers);
+	season_end(racers);
 	cout << "Season done!" << endl;
 }
 
