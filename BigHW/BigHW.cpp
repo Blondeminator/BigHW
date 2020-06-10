@@ -286,6 +286,7 @@ void season_end(vector<racer>& se_r) {
 }
 
 void Is_brake_needed(racer& r) {
+	if (r.before_corner == tracks[r.current_track].size())return;
 	if ((r.position_on_track + r.brake_before_corner()) > tracks[r.current_track][r.before_corner].first) {
 		r.status = 2;
 	}
@@ -356,6 +357,7 @@ void step_racers() {
 		if (racers[i].position_on_track > tracks[racers[i].current_track][tracks[racers[i].current_track].size() - 1].first + 500) {
 			racers[i].lap_times.push_back(0);
 			racers[i].position_on_track = racers[i].position_on_track - (tracks[racers[i].current_track][tracks[racers[i].current_track].size() - 1].first + 500);
+			racers[i].before_corner = 0;
 		}
 		if (racers[i].lap_times.size() > number_of_laps) {
 			racers[i].lap_times.pop_back();
