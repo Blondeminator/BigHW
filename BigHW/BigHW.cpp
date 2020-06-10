@@ -386,6 +386,7 @@ void season(vector<racer>& s_r) {
 	int current_track = 0;
 	while (current_track != tracks.size() - 1) {
 		new_race(s_r);
+		current_time = 0;
 		int start_racer_id = 0;
 		racers[start_racer_id++].status = 0; //first racer to start
 		double next_start_time = start_time_difference;
