@@ -229,8 +229,6 @@ void new_racers(vector<Racer>& nr_r, vector<racecar>& nr_c, vector<driver>& nr_d
 		for (int j = 24; j < 32; j++) {
 			DNA_3 += new_driver.DNA[j];
 		}
-
-
 		new_driver.cooperativeness[0] = DNA_0 / 8;
 		new_driver.cooperativeness[1] = DNA_1 / 8;
 		new_driver.cooperativeness[2] = DNA_2 / 8;
@@ -372,25 +370,29 @@ void season(vector<racer>& s_r) {
 	make_cars(cars);
 	make_drivers(drivers);
 	make_racers(racers, cars, drivers);
-	int start_racer_id = 0;
-	racers[start_racer_id++].status = 5; //first racer to start
-	double next_start_time = start_time_difference;
-	int all_racers_done = 0;
-	do{ //1 futam még csak
-		if (current_time == next_start_time) {
-			racers[start_racer_id++].status = 5;
-			if (start_racer_id == racers.size()) {
-				next_start_time = 0;
+	int current_track = 0;
+	while (current_track != tracks.size()) {
+		int start_racer_id = 0;
+		racers[start_racer_id++].status = 5; //first racer to start
+		double next_start_time = start_time_difference;
+		int all_racers_done = 0;
+		do { //1 futam még csak
+			if (current_time == next_start_time) {
+				racers[start_racer_id++].status = 5;
+				if (start_racer_id == racers.size()) {
+					next_start_time = 0;
+				}
+				else {
+					next_start_time += start_time_difference;
+				}
 			}
-			else {
-				next_start_time += start_time_difference;
-			}
-		}
-		status_check();
-		step_racers();
-		status_check();
+			status_check();
+			step_racers();
+			status_check();
 
-	} while (!all_racers_done);
+		} while (!all_racers_done);
+		current_track++;
+	}
 }
 
 int main()
