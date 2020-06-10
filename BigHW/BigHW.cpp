@@ -357,6 +357,7 @@ void step_racers() {
 		racers[i].lap_times[racers[i].lap_times.size() - 1] += delta_t;
 		if (racers[i].position_on_track > tracks[racers[i].current_track][tracks[racers[i].current_track].size() - 1].first + 500) {
 			racers[i].lap_times.push_back(0);
+			racers[i].position_on_track = racers[i].position_on_track - (tracks[racers[i].current_track][tracks[racers[i].current_track].size() - 1].first + 500);
 		}
 		if (racers[i].lap_times.size() > number_of_laps) {
 			racers[i].lap_times.pop_back();
@@ -366,19 +367,35 @@ void step_racers() {
 	current_time += delta_t;
 }
 
+int all_racers_done(vector<racer>& ard_r) {
+	int finished_racers = 0;
+	for (int i = 0; i < ard_r.size(); i++) {
+		if (ard_r[i].status == 5) {
+			finished_racers++;
+		}
+	}
+	if (finished_racers == ard_r.size()) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
 void season(vector<racer>& s_r) {
 	make_cars(cars);
 	make_drivers(drivers);
 	make_racers(racers, cars, drivers);
 	int current_track = 0;
 	while (current_track != tracks.size()) {
+		new_race(s_r);
 		int start_racer_id = 0;
-		racers[start_racer_id++].status = 5; //first racer to start
+		racers[start_racer_id++].status = 0; //first racer to start
 		double next_start_time = start_time_difference;
-		int all_racers_done = 0;
-		do { //1 futam még csak
+		do { //race
+			//cout << current_time << endl;
 			if (current_time == next_start_time) {
-				racers[start_racer_id++].status = 5;
+				racers[start_racer_id++].status = 0;
 				if (start_racer_id == racers.size()) {
 					next_start_time = 0;
 				}
@@ -390,8 +407,9 @@ void season(vector<racer>& s_r) {
 			step_racers();
 			status_check();
 
-		} while (!all_racers_done);
+		} while (!all_racers_done(s_r));
 		current_track++;
+		cout << "New race" << endl;
 	}
 }
 
@@ -413,11 +431,12 @@ int main()
 				track_read.push_back(make_pair(place,direction));
 			}
 		}
+		cout << "File opened succesfully!" << endl;
 	}
 	else {
 		cout << "File not found or could not be opened!" << endl;
 	}
-
-
+	season(racers);
+	cout << "Season done!" << endl;
 }
 
