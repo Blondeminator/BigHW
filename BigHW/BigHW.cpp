@@ -16,7 +16,7 @@ double start_time_difference = 5;
 double q_top_speed = 1; // 1 genes worth of bonus top speed
 double q_acceleration = 1; // 1 genes worth of bonus acceleration
 double q_cornering_speed = 1; // 1 genes worth of bonus cornering speed
- 
+
 vector<vector<pair<double, int>>> tracks;
 vector<pair<double, int>> track_read;
 
@@ -45,7 +45,7 @@ void make_cars(vector<racecar>& mc_c) {
 			else new_racecar.DNA[j] = 1;
 		}
 		new_racecar.top_speed = 70 + ((new_racecar.DNA[0] + new_racecar.DNA[1] + new_racecar.DNA[2]) - (new_racecar.DNA[3] + new_racecar.DNA[4] + new_racecar.DNA[5]) - (new_racecar.DNA[12] + new_racecar.DNA[13] + new_racecar.DNA[14]) + (new_racecar.DNA[15] + new_racecar.DNA[16] + new_racecar.DNA[17])) * q_top_speed;
-		new_racecar.acceleration = 10 + (-new_racecar.DNA[0] - new_racecar.DNA[1] - new_racecar.DNA[2] + (new_racecar.DNA[3] + new_racecar.DNA[4] + new_racecar.DNA[5]) + (new_racecar.DNA[6] + new_racecar.DNA[7] + new_racecar.DNA[8]) - (new_racecar.DNA[9] + new_racecar.DNA[10] + new_racecar.DNA[11]))* q_acceleration;
+		new_racecar.acceleration = 10 + (-new_racecar.DNA[0] - new_racecar.DNA[1] - new_racecar.DNA[2] + (new_racecar.DNA[3] + new_racecar.DNA[4] + new_racecar.DNA[5]) + (new_racecar.DNA[6] + new_racecar.DNA[7] + new_racecar.DNA[8]) - (new_racecar.DNA[9] + new_racecar.DNA[10] + new_racecar.DNA[11])) * q_acceleration;
 		new_racecar.cornering_speed = 30 + ((new_racecar.DNA[9] + new_racecar.DNA[10] + new_racecar.DNA[11]) - (new_racecar.DNA[6] + new_racecar.DNA[7] + new_racecar.DNA[8]) + (new_racecar.DNA[12] + new_racecar.DNA[13] + new_racecar.DNA[14]) - (new_racecar.DNA[15] + new_racecar.DNA[16] + new_racecar.DNA[17])) * q_cornering_speed;
 		mc_c.push_back(new_racecar);
 	}
@@ -56,7 +56,7 @@ void make_drivers(vector<driver>& md_d) {
 		driver new_driver;
 		for (int j = 0; j < 32; j++) {
 			double random = (double)rand() / RAND_MAX;
-			if (random < 0, 5) {
+			if (random < 0.5) {
 				new_driver.DNA[j] = 0;
 			}
 			else new_driver.DNA[j] = 1;
@@ -177,6 +177,10 @@ void new_racers(vector<Racer>& nr_r, vector<racecar>& nr_c, vector<driver>& nr_d
 		int random_DNA = rand() % 18;
 		new_racecar.DNA[random_DNA] = 1;
 
+		/*for (int j = 0; j < 18; j++) {//ezt kell nézni!!
+			cout << new_racecar.DNA[j];
+		}
+		cout << endl;*/
 		new_racecar.top_speed = 70 + ((new_racecar.DNA[0] + new_racecar.DNA[1] + new_racecar.DNA[2]) - (new_racecar.DNA[3] + new_racecar.DNA[4] + new_racecar.DNA[5]) - (new_racecar.DNA[12] + new_racecar.DNA[13] + new_racecar.DNA[14]) + (new_racecar.DNA[15] + new_racecar.DNA[16] + new_racecar.DNA[17])) * q_top_speed;
 		new_racecar.acceleration = 10 + (-new_racecar.DNA[0] - new_racecar.DNA[1] - new_racecar.DNA[2] + (new_racecar.DNA[3] + new_racecar.DNA[4] + new_racecar.DNA[5]) + (new_racecar.DNA[6] + new_racecar.DNA[7] + new_racecar.DNA[8]) - (new_racecar.DNA[9] + new_racecar.DNA[10] + new_racecar.DNA[11])) * q_acceleration;
 		new_racecar.cornering_speed = 30 + ((new_racecar.DNA[9] + new_racecar.DNA[10] + new_racecar.DNA[11]) - (new_racecar.DNA[6] + new_racecar.DNA[7] + new_racecar.DNA[8]) + (new_racecar.DNA[12] + new_racecar.DNA[13] + new_racecar.DNA[14]) - (new_racecar.DNA[15] + new_racecar.DNA[16] + new_racecar.DNA[17])) * q_cornering_speed;
@@ -184,7 +188,8 @@ void new_racers(vector<Racer>& nr_r, vector<racecar>& nr_c, vector<driver>& nr_d
 		int k = i;
 		for (int j = 0; j < nr_c.size(); j++) {
 			for (int l = 0; l < 10; l++) {
-				if (new_racecar.DNA == nr_d[j].DNA || new_racecar.DNA == seasonal_top10_drivers[l].DNA) {
+				if (new_racecar.DNA == nr_c[j].DNA || new_racecar.DNA == seasonal_top10_drivers[l].DNA) {
+					cout << "false" << endl;
 					i--;
 				}
 			}
@@ -211,6 +216,11 @@ void new_racers(vector<Racer>& nr_r, vector<racecar>& nr_c, vector<driver>& nr_d
 		}
 		int random_DNA = RAND_MAX % 32;
 		new_driver.DNA[random_DNA] = 1;
+
+		/*for (int j = 0; j < 18; j++) {//ezt kell nézni!!
+			cout << new_driver.DNA[j];
+		}
+		cout << endl;*/
 		int DNA_0 = 0;
 		int DNA_1 = 0;
 		int DNA_2 = 0;
@@ -254,7 +264,6 @@ void new_racers(vector<Racer>& nr_r, vector<racecar>& nr_c, vector<driver>& nr_d
 		nr_d.push_back(new_driver);
 	}
 	//make new drivers and racecars using top10 dna
-
 	make_racers(nr_r, nr_c, nr_d);
 }
 
@@ -271,7 +280,7 @@ void season_end(vector<racer>& se_r) {
 		one_racer.second = se_r[i].season_points;
 		racer_points.push_back(one_racer);
 	}
-	for (int j = 1; j < 10; j++) {
+	for (int j = 0; j < 10; j++) {
 		max_point = 0;
 		for (int i = 0; i < racer_points.size(); i++) {
 			if (racer_points[i].second > max_point) {
@@ -282,6 +291,22 @@ void season_end(vector<racer>& se_r) {
 		seasonal_top10_cars.push_back(se_r[top].car_object);
 		seasonal_top10_drivers.push_back(se_r[top].driver_object);
 		racer_points.erase(racer_points.begin() + top);
+	}
+	for (int i = 0; i < seasonal_top10_cars.size(); i++) {
+		cout << seasonal_top10_cars[i].id;
+		cout << '\t';
+		for (int j = 0; j < 18; j++) {
+			cout << seasonal_top10_cars[i].DNA[j];
+		}
+		cout << endl;
+	}
+	for (int i = 0; i < seasonal_top10_drivers.size(); i++) {
+		cout << seasonal_top10_drivers[i].id;
+		cout << '\t';
+		for (int j = 0; j < 32; j++) {
+			cout << seasonal_top10_drivers[i].DNA[j];
+		}
+		cout << endl;
 	}
 }
 
@@ -312,22 +337,25 @@ void Is_out_of_corner(racer& r) {
 		r.before_corner++;
 	}
 }
- 
+
 void status_check() {
 	for (int i = 0; i < racers.size(); i++) {
 		if (racers[i].status == 0) { // acc
 			Is_at_top_speed(racers[i]);
 			Is_brake_needed(racers[i]);
-		} else
-		if (racers[i].status == 1) { // top_speed
-			Is_brake_needed(racers[i]);
-		} else
-		if (racers[i].status == 2) { // brake
-			Is_at_corner(racers[i]);
-		} else
-		if (racers[i].status == 3) { //at cornering_speed
-			Is_out_of_corner(racers[i]);
 		}
+		else
+			if (racers[i].status == 1) { // top_speed
+				Is_brake_needed(racers[i]);
+			}
+			else
+				if (racers[i].status == 2) { // brake
+					Is_at_corner(racers[i]);
+				}
+				else
+					if (racers[i].status == 3) { //at cornering_speed
+						Is_out_of_corner(racers[i]);
+					}
 	}
 }
 
@@ -337,20 +365,23 @@ void step_racers() {
 			racers[i].position_on_track += racers[i].current_speed * delta_t;
 			racers[i].current_speed += racers[i].car_object.acceleration * delta_t;
 			racers[i].position_on_track += 0.5 * racers[i].car_object.acceleration * pow(delta_t, 2);
-		} else
-		if (racers[i].status == 1) { // top_speed
-			racers[i].current_speed = racers[i].car_object.top_speed;
-			racers[i].position_on_track += racers[i].current_speed * delta_t;
-		} else
-		if (racers[i].status == 2) { // brake (2 times acceleration)
-			racers[i].position_on_track += racers[i].current_speed * delta_t;
-			racers[i].current_speed += -2.0 * racers[i].car_object.acceleration * delta_t;
-			racers[i].position_on_track += -1.0 * racers[i].car_object.acceleration * pow(delta_t, 2);
-		} else
-		if (racers[i].status == 3) { //at cornering_speed
-			racers[i].current_speed = racers[i].car_object.cornering_speed;
-			racers[i].position_on_track += racers[i].current_speed * delta_t;
 		}
+		else
+			if (racers[i].status == 1) { // top_speed
+				racers[i].current_speed = racers[i].car_object.top_speed;
+				racers[i].position_on_track += racers[i].current_speed * delta_t;
+			}
+			else
+				if (racers[i].status == 2) { // brake (2 times acceleration)
+					racers[i].position_on_track += racers[i].current_speed * delta_t;
+					racers[i].current_speed += -2.0 * racers[i].car_object.acceleration * delta_t;
+					racers[i].position_on_track += -1.0 * racers[i].car_object.acceleration * pow(delta_t, 2);
+				}
+				else
+					if (racers[i].status == 3) { //at cornering_speed
+						racers[i].current_speed = racers[i].car_object.cornering_speed;
+						racers[i].position_on_track += racers[i].current_speed * delta_t;
+					}
 	}
 	for (int i = 0; i < racers.size(); i++) {
 		racers[i].lap_times[racers[i].lap_times.size() - 1] += delta_t;
@@ -427,7 +458,7 @@ int main()
 				track_read.clear();
 			}
 			else {
-				track_read.push_back(make_pair(place,direction));
+				track_read.push_back(make_pair(place, direction));
 			}
 		}
 		cout << "File opened succesfully!" << endl;
@@ -440,9 +471,23 @@ int main()
 	make_racers(racers, cars, drivers);
 	for (int current_season = 0; current_season < number_of_seasons; current_season++) {
 		if (current_season > 0)new_racers(racers, cars, drivers);
+		/*cout << "driver" << endl;
+		for (int j = 0; j < racers.size(); j++) {
+			for (int k = 0; k < 32; k++) {
+				cout << racers[j].driver_object.DNA[k];
+			}
+			cout << endl;
+		}
+		cout << "car" << endl;
+		for (int j = 0; j < racers.size(); j++) {
+			for (int k = 0; k < 18; k++) {
+				cout << racers[j].car_object.DNA[k];
+			}
+			cout << endl;
+		}
+		cout << endl;*/
 		season(racers);
 		season_end(racers);
 		cout << "Season done!" << endl;
 	}
 }
-
