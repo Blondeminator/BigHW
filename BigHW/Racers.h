@@ -26,7 +26,7 @@ public:
 	std::vector<double> lap_times; // self measured time
 	int before_corner;
 	double position_on_track;
-	int status; //0: acceleration, 1: top speed, 2: braking 3: at cornering speed
+	int status; //0: acceleration, 1: top speed, 2: braking 3: at cornering speed 4: before start 5: after race
 	double current_speed; // [m/s]
 
 	Racer(driver& d, racecar& rc);

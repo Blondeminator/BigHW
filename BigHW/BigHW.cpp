@@ -8,9 +8,9 @@ using namespace std;
 int random_seed = 0;
 double delta_t = 0.1;
 
-int number_of_seasons = 10;
+int number_of_seasons = 30;
 int number_of_contestants = 20;
-int number_of_laps = 10;
+int number_of_laps = 3;
 double start_time_difference = 5;
 
 double q_top_speed = 1; // 1 genes worth of bonus top speed
@@ -90,10 +90,9 @@ void make_drivers(vector<driver>& md_d) {
 
 void end_race(vector<Racer>& er_r) {
 	vector<pair<int, double>> track_times;
-	vector< double> summ_times;
+	vector<pair<int, double>> summ_times;
 	vector<pair<int, double >> top10;
 	double one_time = 0;
-	pair<int, double> top_plus;
 	pair<int, double> best_time;
 	best_time.second = (double)RAND_MAX;
 	pair<int, double> one_track_one_time;
@@ -119,25 +118,27 @@ void end_race(vector<Racer>& er_r) {
 				one_time += track_times[i].second;
 			}
 		}
-		summ_times.push_back(one_time);
+		summ_times.push_back(make_pair(j,one_time));
 	}
-	for (int j = 1; j <= 10; j++) {
-		double min_sum = summ_times[j];
-		int index = j;
+	for (int j = 0; j < 10; j++) {
+		double min_sum = INFINITY;
+		int erase_index = -99;
 		pair<int, double> top_plus;
 		for (int i = 0; i < summ_times.size(); i++) {
-			if (summ_times[i] < min_sum) {
-				min_sum = summ_times[i];
-				top_plus.first = i;
-				top_plus.second = summ_times[i];
+			if (summ_times[i].second < min_sum) {
+				min_sum = summ_times[i].second;
+				erase_index = i;
+				top_plus.first = summ_times[i].first;
+				top_plus.second = summ_times[i].second;
 			}
 		}
 		top10.push_back(top_plus);
-		summ_times.erase(summ_times.begin() + top_plus.first);
+		summ_times.erase(summ_times.begin() + erase_index);
 	}
-	for (int i = 0; i < 10; i++) {
+	/*for (int i = 0; i < 10; i++) {
 		er_r[top10[i].first].season_points += 10 - i;
-	}
+		cout << er_r[top10[i].first].season_points << endl;
+	}*/
 	er_r[best_time.first].season_points++;
 }
 
@@ -282,6 +283,7 @@ void season_end(vector<racer>& se_r) {
 	}
 	for (int j = 0; j < 10; j++) {
 		max_point = 0;
+		top = 0;
 		for (int i = 0; i < racer_points.size(); i++) {
 			if (racer_points[i].second > max_point) {
 				max_point = racer_points[i].second;
@@ -292,6 +294,7 @@ void season_end(vector<racer>& se_r) {
 		seasonal_top10_drivers.push_back(se_r[top].driver_object);
 		racer_points.erase(racer_points.begin() + top);
 	}
+	/*
 	for (int i = 0; i < seasonal_top10_cars.size(); i++) {
 		cout << seasonal_top10_cars[i].id;
 		cout << '\t';
@@ -307,7 +310,7 @@ void season_end(vector<racer>& se_r) {
 			cout << seasonal_top10_drivers[i].DNA[j];
 		}
 		cout << endl;
-	}
+	}*/
 }
 
 void Is_brake_needed(racer& r) {
@@ -384,7 +387,7 @@ void step_racers() {
 					}
 	}
 	for (int i = 0; i < racers.size(); i++) {
-		racers[i].lap_times[racers[i].lap_times.size() - 1] += delta_t;
+		if(racers[i].status < 4)racers[i].lap_times[racers[i].lap_times.size() - 1] += delta_t;
 		if (racers[i].position_on_track > tracks[racers[i].current_track][tracks[racers[i].current_track].size() - 1].first + 500) {
 			racers[i].lap_times.push_back(0);
 			racers[i].position_on_track = racers[i].position_on_track - (tracks[racers[i].current_track][tracks[racers[i].current_track].size() - 1].first + 500);
@@ -419,14 +422,14 @@ void season(vector<racer>& s_r) {
 		new_race(s_r);
 		current_time = 0;
 		int start_racer_id = 0;
-		racers[start_racer_id++].status = 0; //first racer to start
+		s_r[start_racer_id++].status = 0; //first racer to start
 		double next_start_time = start_time_difference;
 		do { //race
 			//cout << current_time << endl;
-			if (current_time == next_start_time) {
-				racers[start_racer_id++].status = 0;
-				if (start_racer_id == racers.size()) {
-					next_start_time = 0;
+			if (current_time >= next_start_time) {
+				s_r[start_racer_id++].status = 0;
+				if (start_racer_id == s_r.size()) {
+					next_start_time = INFINITY;
 				}
 				else {
 					next_start_time += start_time_difference;

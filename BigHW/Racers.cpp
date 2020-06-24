@@ -13,10 +13,9 @@ Racer::Racer(driver& d, racecar& rc) {
 void Racer::new_track() {
 	position_on_track = 0;
 	current_speed = 0;
-	status = 0;
 	lap_times.clear();
 	lap_times.push_back(0);
-	status = 0;
+	status = 4;
 	current_track++;
 	before_corner = 0;
 }
