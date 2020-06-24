@@ -5,6 +5,9 @@
 
 using namespace std;
 
+ifstream file;
+ofstream file_out;
+
 int random_seed = 0;
 double delta_t = 0.1;
 
@@ -135,10 +138,13 @@ void end_race(vector<Racer>& er_r) {
 		top10.push_back(top_plus);
 		summ_times.erase(summ_times.begin() + erase_index);
 	}
-	/*for (int i = 0; i < 10; i++) {
+	file_out << "The best times for this race were:" << endl;
+	for (int i = 0; i < 3; i++) {
+		file_out << er_r[top10[i].first].lap_times[er_r[top10[i].first].lap_times.size() - 1] << endl;
+	}
+	for (int i = 0; i < 10; i++) {
 		er_r[top10[i].first].season_points += 10 - i;
-		cout << er_r[top10[i].first].season_points << endl;
-	}*/
+	}
 	er_r[best_time.first].season_points++;
 }
 
@@ -443,13 +449,13 @@ void season(vector<racer>& s_r) {
 		end_race(s_r);
 		current_track++;
 		cout << "New race" << endl;
+		file_out << "New race" << endl;
 	}
 }
 
 int main()
 {
 	srand(0);
-	ifstream file;
 	file.open("Tracks.txt");
 	if (file.is_open()) {
 		double place;
@@ -469,6 +475,7 @@ int main()
 	else {
 		cout << "File not found or could not be opened!" << endl;
 	}
+	file_out.open("data.txt");
 	make_cars(cars);
 	make_drivers(drivers);
 	make_racers(racers, cars, drivers);
@@ -492,5 +499,6 @@ int main()
 		season(racers);
 		season_end(racers);
 		cout << "Season done!" << endl;
+		file_out << "Season done!" << endl;
 	}
 }
